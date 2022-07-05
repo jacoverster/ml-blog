@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>https://jacoverster.github.io/ml-blog/keras/sample%20size/2021/06/05/Keras-sample-size-example.html</loc>
+<lastmod>2021-06-05T00:00:00-05:00</lastmod>
+</url>
+<url>
 <loc>https://jacoverster.github.io/ml-blog/object%20detection/yolov5/neuralmagic/pistols/2022/06/30/Training-a-pistol-detector-with-YOLOv5-and-Neuralmagic.html</loc>
 <lastmod>2022-06-30T00:00:00-05:00</lastmod>
 </url>
