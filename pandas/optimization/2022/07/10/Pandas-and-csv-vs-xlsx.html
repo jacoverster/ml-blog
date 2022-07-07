@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pandas csv vs xlsx | Jaco Verster</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Pandas csv vs xlsx" />
+<meta name="author" content="Jaco Verster" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Which file format is better to use when trying to minimize file size and improve loading times?" />
+<meta property="og:description" content="Which file format is better to use when trying to minimize file size and improve loading times?" />
+<link rel="canonical" href="https://jacoverster.github.io/ml-blog/pandas/optimization/2022/07/10/Pandas-and-csv-vs-xlsx.html" />
+<meta property="og:url" content="https://jacoverster.github.io/ml-blog/pandas/optimization/2022/07/10/Pandas-and-csv-vs-xlsx.html" />
+<meta property="og:site_name" content="Jaco Verster" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-07-10T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pandas csv vs xlsx" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Jaco Verster"},"dateModified":"2022-07-10T00:00:00-05:00","datePublished":"2022-07-10T00:00:00-05:00","description":"Which file format is better to use when trying to minimize file size and improve loading times?","headline":"Pandas csv vs xlsx","mainEntityOfPage":{"@type":"WebPage","@id":"https://jacoverster.github.io/ml-blog/pandas/optimization/2022/07/10/Pandas-and-csv-vs-xlsx.html"},"url":"https://jacoverster.github.io/ml-blog/pandas/optimization/2022/07/10/Pandas-and-csv-vs-xlsx.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/ml-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://jacoverster.github.io/ml-blog/feed.xml" title="Jaco Verster" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KZFR3RTQ2Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KZFR3RTQ2Q');
+</script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/ml-blog/images/favicon.ico">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/ml-blog/">Jaco Verster</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/ml-blog/about/">About Me</a><a class="page-link" href="/ml-blog/search/">Search</a><a class="page-link" href="/ml-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Pandas csv vs xlsx</h1><p class="page-description">Which file format is better to use when trying to minimize file size and improve loading times?</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-07-10T00:00:00-05:00" itemprop="datePublished">
+        Jul 10, 2022
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Jaco Verster</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      5 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/ml-blog/categories/#pandas">pandas</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/ml-blog/categories/#optimization">optimization</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-justify-center">
+          <div class="px-2">
+
+    <a href="https://github.com/jacoverster/ml-blog/tree/master/_notebooks/2022-07-10-Pandas and csv vs xlsx.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/ml-blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/jacoverster/ml-blog/master?filepath=_notebooks%2F2022-07-10-Pandas+and+csv+vs+xlsx.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/ml-blog/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/jacoverster/ml-blog/blob/master/_notebooks/2022-07-10-Pandas and csv vs xlsx.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/ml-blog/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+          <div class="px-2">
+  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2Fjacoverster%2Fml-blog%2Fblob%2Fmaster%2F_notebooks%2F2022-07-10-Pandas+and+csv+vs+xlsx.ipynb" target="_blank">
+      <img class="notebook-badge-image" src="/ml-blog/assets/badges/deepnote.svg" alt="Launch in Deepnote"/>
+  </a>
+</div>
+
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2022-07-10-Pandas and csv vs xlsx.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Example-use-case">Example use case<a class="anchor-link" href="#Example-use-case"> </a></h2><p>A user can upload either a <strong>csv</strong> or an <strong>xlsx</strong> log file through a front-end portal. The log files has an average size of around 50MB. The files are uploaded to a cloud storage instance and the Python back-end downloads and processed them. The goals are to <strong>minimize cloud storage usage</strong> and to <strong>load the files as fast as possible</strong>.</p>
+<p>Question: Which file format is better to use, csv or xlsx?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><div class="flash">
+    <svg class="octicon octicon-info" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm6.5-.25A.75.75 0 017.25 7h1a.75.75 0 01.75.75v2.75h.25a.75.75 0 010 1.5h-2a.75.75 0 010-1.5h.25v-2h-.25a.75.75 0 01-.75-.75zM8 6a1 1 0 100-2 1 1 0 000 2z"></path></svg>
+    <strong>Note: </strong>TL;DR Using csv files use <strong>53% less space</strong> and loads <strong>97% faster</strong> than xlsx files.
+</div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Generate-dummy-data">Generate dummy data<a class="anchor-link" href="#Generate-dummy-data"> </a></h3><p>Generate some dummy data that is roughly 50MB in size and store it in a Pandas DataFrame.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">250</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We export the data as csv and xlsx files to local storage and compress them to further reduce file size. We use the "zip" format as it offers the best overall compression ratio vs. read/write speeds. We note that pd.to_excel() takes significantly longer than pd.to_csv().</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;csv.csv&quot;</span><span class="p">)</span>
+<span class="o">!</span> zip csv.zip csv.csv
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">&quot;excel.xlsx&quot;</span><span class="p">)</span>
+<span class="o">!</span> zip excel.zip excel.xlsx 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><div class="flash">
+    <svg class="octicon octicon-info" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm6.5-.25A.75.75 0 017.25 7h1a.75.75 0 01.75.75v2.75h.25a.75.75 0 010 1.5h-2a.75.75 0 010-1.5h.25v-2h-.25a.75.75 0 01-.75-.75zM8 6a1 1 0 100-2 1 1 0 000 2z"></path></svg>
+    <strong>Note: </strong>A quick benchmark of different compression methods native to Pandas is available at the end of the post.
+</div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><div class="flash flash-success">
+    <svg class="octicon octicon-checklist" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M2.5 1.75a.25.25 0 01.25-.25h8.5a.25.25 0 01.25.25v7.736a.75.75 0 101.5 0V1.75A1.75 1.75 0 0011.25 0h-8.5A1.75 1.75 0 001 1.75v11.5c0 .966.784 1.75 1.75 1.75h3.17a.75.75 0 000-1.5H2.75a.25.25 0 01-.25-.25V1.75zM4.75 4a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-4.5zM4 7.75A.75.75 0 014.75 7h2a.75.75 0 010 1.5h-2A.75.75 0 014 7.75zm11.774 3.537a.75.75 0 00-1.048-1.074L10.7 14.145 9.281 12.72a.75.75 0 00-1.062 1.058l1.943 1.95a.75.75 0 001.055.008l4.557-4.45z"></path></svg>
+    <strong>Tip: </strong>if Pandas has errors when reading/writing excel files try installing the openpyxl engine with "pip install openpyxl".
+</div></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="File-size">File size<a class="anchor-link" href="#File-size"> </a></h3><p>Now, lets consider the files sizes:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span> ls -lh *.<span class="o">{</span>csv,xlsx,zip<span class="o">}</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>-rw-r--r-- 1 jverster jverster 47M Jul  7 16:07 csv.csv
+-rw-r--r-- 1 jverster jverster 22M Jul  7 16:07 csv.zip
+-rw-r--r-- 1 jverster jverster 32M Jul  7 16:07 excel.xlsx
+-rw-r--r-- 1 jverster jverster 32M Jul  7 16:07 excel.zip
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The csv file saves to 47MB and can be compressed at a ratio of 0.47 to 22MB which leads to a space saving of roughly <strong>53%</strong>. On the other hand, the xlsx file saves to 32MB, but offers almost no compression gains. The compressed csv.zip file is the smallest option.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-speed">Read speed<a class="anchor-link" href="#Read-speed"> </a></h3><p>Next, lets consider the read speed of csv.csv and csv.zip compared to the excel.xlsx file.</p>
+<p>Pandas can read compressed files directly with pd.read_csv(), but not with pd.read_excel(). We read only the xlsx file convenience sake.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;csv.csv read in:&quot;</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> pd.read_csv(&quot;csv.csv&quot;)
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;csv.zip read in:&quot;</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> pd.read_csv(&quot;csv.zip&quot;)
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;excel.xlsx read in:&quot;</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> -r 1 -n 1 pd.read_excel(&quot;excel.xlsx&quot;)
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>csv.csv read in:
+392 ms ± 13.1 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+csv.zip read in:
+571 ms ± 16.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+excel.xlsx read in:
+18.1 s ± 0 ns per loop (mean ± std. dev. of 1 run, 1 loop each)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We see a slight reduction in speed when reading the csv.csv compared to csv.zip. Surprisingly, the excel.xlsx file takes 18.1 seconds to read. This means the csv.zip file reads about <strong>97%</strong> faster than the excel.xlsx file!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Reading-directly-from-the-cloud">Reading directly from the cloud<a class="anchor-link" href="#Reading-directly-from-the-cloud"> </a></h3><p>Finally, Pandas read_csv() can also read files directly from a url which is useful for this use case.</p>
+<p>I was interested to test this so I uploaded the csv files to Google Drive and read them directly from there.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">csv_file_url</span> <span class="o">=</span> <span class="s2">&quot;https://drive.google.com/file/d/1KoserTnHwB14dXHjRMl3PhKnm3fulR3E/view?usp=sharing&quot;</span>
+<span class="n">csv_zip_url</span> <span class="o">=</span> <span class="s2">&quot;https://drive.google.com/file/d/1qQjmg9aeVh28y5zSBxaTX-ZBi8JePoFn/view?usp=sharing&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;csv.csv read from Google Drive in:&quot;</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> pd.read_csv(csv_file_url)
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;csv.zip read from Google Drive in:&quot;</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> pd.read_csv(csv_zip_url)
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>csv.csv read from Google Drive in:
+894 ms ± 67.9 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+csv.zip read from Google Drive in:
+927 ms ± 49.7 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The times are really close. The smaller zip file downloads faster, but then reads slightly slower. With a blazing fast internet connection the csv.zip files might be slightly faster.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Summary">Summary<a class="anchor-link" href="#Summary"> </a></h3><p>So in summary, compressed csv.zip files will allow us to use <strong>53% less space</strong> and is <strong>97% faster</strong> when compared to excel.xlsx files</p>
+<p>Very nice!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr />
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Comparison-of-different-compression-formats">Comparison of different compression formats<a class="anchor-link" href="#Comparison-of-different-compression-formats"> </a></h3><p>Pandas offers "on-the-fly compression of the output data" as part of to_csv() and according the the latest documentation it supports the following extensions: ".gzip", ".bz2", ".zip" and ".xz". A quick experiment is in order, so we export a file in each format, then check file sizes and finally time reading them back in.</p>
+<p>Note: I did not consider different compression levels, but you can also set this.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">compression_formats</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;csv&quot;</span><span class="p">,</span> <span class="s2">&quot;gzip&quot;</span><span class="p">,</span> <span class="s2">&quot;bz2&quot;</span><span class="p">,</span> <span class="s2">&quot;zip&quot;</span><span class="p">,</span> <span class="s2">&quot;xz&quot;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">fmt</span> <span class="ow">in</span> <span class="n">compression_formats</span><span class="p">:</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;csv.</span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;infer&quot;</span><span class="p">)</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> seconds.&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Saved csv in 2.87 seconds.
+Saved gzip in 2.77 seconds.
+Saved bz2 in 5.92 seconds.
+Saved zip in 5.49 seconds.
+Saved xz in 53.86 seconds.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span> ls -lh *.<span class="o">{</span>csv,gzip,bz2,zip,xz<span class="o">}</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>-rw-r--r-- 1 jverster jverster 19M Jul  7 16:09 csv.bz2
+-rw-r--r-- 1 jverster jverster 47M Jul  7 16:08 csv.csv
+-rw-r--r-- 1 jverster jverster 47M Jul  7 16:08 csv.gzip
+-rw-r--r-- 1 jverster jverster 21M Jul  7 16:10 csv.xz
+-rw-r--r-- 1 jverster jverster 22M Jul  7 16:09 csv.zip
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">fmt</span> <span class="ow">in</span> <span class="n">compression_formats</span><span class="p">:</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;csv.</span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Read </span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> seconds.&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Read csv in 0.56 seconds.
+Read gzip in 0.47 seconds.
+Read bz2 in 2.59 seconds.
+Read zip in 0.59 seconds.
+Read xz in 1.41 seconds.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Summary">Summary<a class="anchor-link" href="#Summary"> </a></h3><p>Best save times:</p>
+<ol>
+<li>gzip</li>
+<li>zip</li>
+<li>bz2</li>
+</ol>
+<p>Best compression rates:</p>
+<ol>
+<li>bz2</li>
+<li>xz</li>
+<li>zip</li>
+</ol>
+<p>Best load times:</p>
+<ol>
+<li>gzip</li>
+<li>zip</li>
+<li>xz</li>
+</ol>
+<p>Winner:</p>
+<ol>
+<li>"zip" has decent compression and good overall save/load times.</li>
+<li>"xz" offers the best compression but it is slow when saving.</li>
+<li>"gzip" is the fastest but does not offer any good compression out of the box.</li>
+</ol>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="jacoverster/ml-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/ml-blog/pandas/optimization/2022/07/10/Pandas-and-csv-vs-xlsx.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/ml-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/ml-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/ml-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>A space to document adventures on my computer.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/jacoverster" target="_blank" title="jacoverster"><svg class="svg-icon grey"><use xlink:href="/ml-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/jacoverster" target="_blank" title="jacoverster"><svg class="svg-icon grey"><use xlink:href="/ml-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
