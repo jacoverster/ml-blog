@@ -4,22 +4,22 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Pandas csv vs xlsx | Jaco Verster</title>
+<title>Faster Pandas - csv vs. xlsx | Jaco Verster</title>
 <meta name="generator" content="Jekyll v4.1.1" />
-<meta property="og:title" content="Pandas csv vs xlsx" />
+<meta property="og:title" content="Faster Pandas - csv vs. xlsx" />
 <meta name="author" content="Jaco Verster" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Which file format is better to use when trying to minimize file size and improve loading times?" />
 <meta property="og:description" content="Which file format is better to use when trying to minimize file size and improve loading times?" />
-<link rel="canonical" href="https://jacoverster.github.io/ml-blog/pandas/optimization/2022/07/10/Pandas-and-csv-vs-xlsx.html" />
-<meta property="og:url" content="https://jacoverster.github.io/ml-blog/pandas/optimization/2022/07/10/Pandas-and-csv-vs-xlsx.html" />
+<link rel="canonical" href="https://jacoverster.github.io/ml-blog/pandas/optimization/2022/07/10/Faster-Pandas-csv-vs-xlsx.html" />
+<meta property="og:url" content="https://jacoverster.github.io/ml-blog/pandas/optimization/2022/07/10/Faster-Pandas-csv-vs-xlsx.html" />
 <meta property="og:site_name" content="Jaco Verster" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2022-07-10T00:00:00-05:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Pandas csv vs xlsx" />
+<meta property="twitter:title" content="Faster Pandas - csv vs. xlsx" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Jaco Verster"},"dateModified":"2022-07-10T00:00:00-05:00","datePublished":"2022-07-10T00:00:00-05:00","description":"Which file format is better to use when trying to minimize file size and improve loading times?","headline":"Pandas csv vs xlsx","mainEntityOfPage":{"@type":"WebPage","@id":"https://jacoverster.github.io/ml-blog/pandas/optimization/2022/07/10/Pandas-and-csv-vs-xlsx.html"},"url":"https://jacoverster.github.io/ml-blog/pandas/optimization/2022/07/10/Pandas-and-csv-vs-xlsx.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Jaco Verster"},"dateModified":"2022-07-10T00:00:00-05:00","datePublished":"2022-07-10T00:00:00-05:00","description":"Which file format is better to use when trying to minimize file size and improve loading times?","headline":"Faster Pandas - csv vs. xlsx","mainEntityOfPage":{"@type":"WebPage","@id":"https://jacoverster.github.io/ml-blog/pandas/optimization/2022/07/10/Faster-Pandas-csv-vs-xlsx.html"},"url":"https://jacoverster.github.io/ml-blog/pandas/optimization/2022/07/10/Faster-Pandas-csv-vs-xlsx.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/ml-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://jacoverster.github.io/ml-blog/feed.xml" title="Jaco Verster" /><!-- the google_analytics_id gets auto inserted from the config file -->
 
@@ -90,7 +90,7 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Pandas csv vs xlsx</h1><p class="page-description">Which file format is better to use when trying to minimize file size and improve loading times?</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-07-10T00:00:00-05:00" itemprop="datePublished">
+    <h1 class="post-title p-name" itemprop="name headline">Faster Pandas - csv vs. xlsx</h1><p class="page-description">Which file format is better to use when trying to minimize file size and improve loading times?</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-07-10T00:00:00-05:00" itemprop="datePublished">
         Jul 10, 2022
       </time>• 
           <span itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -98,7 +98,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      5 min read
+      4 min read
     
 </span></p>
 
@@ -119,24 +119,24 @@ window.onload = wrap_img;
         <div class="pb-5 d-flex flex-justify-center">
           <div class="px-2">
 
-    <a href="https://github.com/jacoverster/ml-blog/tree/master/_notebooks/2022-07-10-Pandas and csv vs xlsx.ipynb" role="button" target="_blank">
+    <a href="https://github.com/jacoverster/ml-blog/tree/master/_notebooks/2022-07-10-Faster Pandas csv vs xlsx.ipynb" role="button" target="_blank">
 <img class="notebook-badge-image" src="/ml-blog/assets/badges/github.svg" alt="View On GitHub">
     </a>
 </div>
 
           <div class="px-2">
-    <a href="https://mybinder.org/v2/gh/jacoverster/ml-blog/master?filepath=_notebooks%2F2022-07-10-Pandas+and+csv+vs+xlsx.ipynb" target="_blank">
+    <a href="https://mybinder.org/v2/gh/jacoverster/ml-blog/master?filepath=_notebooks%2F2022-07-10-Faster+Pandas+csv+vs+xlsx.ipynb" target="_blank">
         <img class="notebook-badge-image" src="/ml-blog/assets/badges/binder.svg" alt="Open In Binder"/>
     </a>
 </div>
 
           <div class="px-2">
-    <a href="https://colab.research.google.com/github/jacoverster/ml-blog/blob/master/_notebooks/2022-07-10-Pandas and csv vs xlsx.ipynb" target="_blank">
+    <a href="https://colab.research.google.com/github/jacoverster/ml-blog/blob/master/_notebooks/2022-07-10-Faster Pandas csv vs xlsx.ipynb" target="_blank">
         <img class="notebook-badge-image" src="/ml-blog/assets/badges/colab.svg" alt="Open In Colab"/>
     </a>
 </div>
           <div class="px-2">
-  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2Fjacoverster%2Fml-blog%2Fblob%2Fmaster%2F_notebooks%2F2022-07-10-Pandas+and+csv+vs+xlsx.ipynb" target="_blank">
+  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2Fjacoverster%2Fml-blog%2Fblob%2Fmaster%2F_notebooks%2F2022-07-10-Faster+Pandas+csv+vs+xlsx.ipynb" target="_blank">
       <img class="notebook-badge-image" src="/ml-blog/assets/badges/deepnote.svg" alt="Launch in Deepnote"/>
   </a>
 </div>
@@ -149,7 +149,7 @@ window.onload = wrap_img;
 #################################################
 ### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
 #################################################
-# file to edit: _notebooks/2022-07-10-Pandas and csv vs xlsx.ipynb
+# file to edit: _notebooks/2022-07-10-Faster Pandas csv vs xlsx.ipynb
 -->
 
 <div class="container" id="notebook-container">
@@ -456,7 +456,7 @@ csv.zip read from Google Drive in:
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 
-<span class="n">compression_formats</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;csv&quot;</span><span class="p">,</span> <span class="s2">&quot;gzip&quot;</span><span class="p">,</span> <span class="s2">&quot;bz2&quot;</span><span class="p">,</span> <span class="s2">&quot;zip&quot;</span><span class="p">,</span> <span class="s2">&quot;xz&quot;</span><span class="p">]</span>
+<span class="n">compression_formats</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;csv&quot;</span><span class="p">,</span> <span class="s2">&quot;gz&quot;</span><span class="p">,</span> <span class="s2">&quot;bz2&quot;</span><span class="p">,</span> <span class="s2">&quot;zip&quot;</span><span class="p">,</span> <span class="s2">&quot;xz&quot;</span><span class="p">]</span>
 
 <span class="k">for</span> <span class="n">fmt</span> <span class="ow">in</span> <span class="n">compression_formats</span><span class="p">:</span>
     <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
@@ -475,11 +475,11 @@ csv.zip read from Google Drive in:
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Saved csv in 2.87 seconds.
-Saved gzip in 2.77 seconds.
-Saved bz2 in 5.92 seconds.
-Saved zip in 5.49 seconds.
-Saved xz in 53.86 seconds.
+<pre>Saved csv in 2.59 seconds.
+Saved gz in 6.94 seconds.
+Saved bz2 in 5.67 seconds.
+Saved zip in 5.3 seconds.
+Saved xz in 54.73 seconds.
 </pre>
 </div>
 </div>
@@ -497,7 +497,7 @@ Saved xz in 53.86 seconds.
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span> ls -lh *.<span class="o">{</span>csv,gzip,bz2,zip,xz<span class="o">}</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span> ls -lh *.<span class="o">{</span>csv,gz,bz2,zip,xz<span class="o">}</span>
 </pre></div>
 
     </div>
@@ -510,11 +510,11 @@ Saved xz in 53.86 seconds.
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>-rw-r--r-- 1 jverster jverster 19M Jul  7 16:09 csv.bz2
--rw-r--r-- 1 jverster jverster 47M Jul  7 16:08 csv.csv
--rw-r--r-- 1 jverster jverster 47M Jul  7 16:08 csv.gzip
--rw-r--r-- 1 jverster jverster 21M Jul  7 16:10 csv.xz
--rw-r--r-- 1 jverster jverster 22M Jul  7 16:09 csv.zip
+<pre>-rw-r--r-- 1 jverster jverster 19M Jul  8 11:09 csv.bz2
+-rw-r--r-- 1 jverster jverster 47M Jul  8 11:09 csv.csv
+-rw-r--r-- 1 jverster jverster 22M Jul  8 11:09 csv.gz
+-rw-r--r-- 1 jverster jverster 21M Jul  8 11:10 csv.xz
+-rw-r--r-- 1 jverster jverster 22M Jul  8 11:09 csv.zip
 </pre>
 </div>
 </div>
@@ -549,11 +549,11 @@ Saved xz in 53.86 seconds.
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Read csv in 0.56 seconds.
-Read gzip in 0.47 seconds.
-Read bz2 in 2.59 seconds.
-Read zip in 0.59 seconds.
-Read xz in 1.41 seconds.
+<pre>Read csv in 0.47 seconds.
+Read gz in 0.73 seconds.
+Read bz2 in 2.46 seconds.
+Read zip in 0.68 seconds.
+Read xz in 1.47 seconds.
 </pre>
 </div>
 </div>
@@ -568,27 +568,27 @@ Read xz in 1.41 seconds.
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Summary">Summary<a class="anchor-link" href="#Summary"> </a></h3><p>Best save times:</p>
 <ol>
-<li>gzip</li>
 <li>zip</li>
 <li>bz2</li>
+<li>gz</li>
 </ol>
-<p>Best compression rates:</p>
+<p>Best compression rates (all close):</p>
 <ol>
 <li>bz2</li>
 <li>xz</li>
-<li>zip</li>
+<li>zip and gz</li>
 </ol>
 <p>Best load times:</p>
 <ol>
-<li>gzip</li>
 <li>zip</li>
+<li>gz</li>
 <li>xz</li>
 </ol>
 <p>Winner:</p>
 <ol>
 <li>"zip" has decent compression and good overall save/load times.</li>
-<li>"xz" offers the best compression but it is slow when saving.</li>
-<li>"gzip" is the fastest but does not offer any good compression out of the box.</li>
+<li>"gz" offers decent compression but it is slower when saving.</li>
+<li>"bz2" has the best compression but is slow to load.</li>
 </ol>
 
 </div>
@@ -606,7 +606,7 @@ Read xz in 1.41 seconds.
         theme="github-light"
         crossorigin="anonymous"
         async>
-</script><a class="u-url" href="/ml-blog/pandas/optimization/2022/07/10/Pandas-and-csv-vs-xlsx.html" hidden></a>
+</script><a class="u-url" href="/ml-blog/pandas/optimization/2022/07/10/Faster-Pandas-csv-vs-xlsx.html" hidden></a>
 </article>
 
       </div>
