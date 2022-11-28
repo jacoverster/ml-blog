@@ -166,7 +166,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Part of my work involves building a Windows apps that run powerful Python scripts for my users. I typically use <a href="https://docs.python.org/3/library/tkinter.html">tkinter</a> to build the UI and I've been playing with the idea to automate the compilation step by using a CI/CD runner. I recently found out that you can spin up a Windows shared runner on Gitlab for free, so I just had to test it out. Now the catch was that I wasn't close to my computer at the time and I only had my phone with me.</p>
+<p>Part of my work involves building a Windows apps that run powerful Python scripts for my users. I typically use <a href="https://docs.python.org/3/library/tkinter.html">tkinter</a> to build the UI and <a href="https://nuitka.net/">nuitka</a> to compile it into a standalone executable. I've been playing with the idea to automate the compilation step by using a CI/CD runner and recently found out that you can spin up a Windows shared runner on Gitlab for free, so I just had to test it out. Now the catch was that I wasn't close to my computer at the time and I only had my phone with me.</p>
 <p>I enjoy a challenge so I thought: "Let me see if I can build this using only my smartphone. I just wanted a very simple test app, so I could copy-paste code from the internet.It should be doable without my IDE right?" So, I set out to build this using only my smartphone!</p>
 
 </div>
@@ -196,7 +196,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">.</span><span class="n">shared_windows_runners</span><span class="p">:</span>
+<div class=" highlight hl-ipython3"><pre><span></span> <span class="o">.</span><span class="n">shared_windows_runners</span><span class="p">:</span>
    <span class="n">tags</span><span class="p">:</span>
    <span class="o">-</span> <span class="n">shared</span><span class="o">-</span><span class="n">windows</span>
    <span class="o">-</span> <span class="n">windows</span>
@@ -208,8 +208,8 @@ window.onload = wrap_img;
    <span class="n">stage</span><span class="p">:</span> <span class="n">build</span>
    <span class="n">script</span><span class="p">:</span>
    <span class="o">-</span> <span class="n">choco</span> <span class="n">install</span> <span class="n">python</span> <span class="o">--</span><span class="n">version</span><span class="o">=</span><span class="mf">3.9</span><span class="o">.</span><span class="mi">4</span> <span class="o">-</span><span class="n">y</span> <span class="o">-</span><span class="n">f</span>
-   <span class="o">-</span> <span class="s2">"C:</span><span class="se">\\</span><span class="s2">Python39</span><span class="se">\\</span><span class="s2">python.exe -m pip install pyinstaller"</span>
-   <span class="o">-</span> <span class="s2">"C:</span><span class="se">\\</span><span class="s2">Python39</span><span class="se">\\</span><span class="s2">Scripts</span><span class="se">\\</span><span class="s2">pyinstaller.exe app.py -F"</span>
+   <span class="o">-</span> <span class="s2">"C:</span><span class="se">\\</span><span class="s2">Python39</span><span class="se">\\</span><span class="s2">python.exe -m pip install -r requirements.txt"</span>
+   <span class="o">-</span> <span class="s2">"C:</span><span class="se">\\</span><span class="s2">Python39</span><span class="se">\\</span><span class="s2">python.exe -m nuitka --onefile --assume-yes-for-downloads --enable-plugin=tk-inter --output-dir=dist app.py"</span>
    <span class="n">artifacts</span><span class="p">:</span>
      <span class="n">paths</span><span class="p">:</span>
        <span class="o">-</span> <span class="n">dist</span><span class="o">/</span><span class="n">app</span><span class="o">.</span><span class="n">exe</span>
